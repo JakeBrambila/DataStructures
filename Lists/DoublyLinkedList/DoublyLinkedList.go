@@ -70,13 +70,13 @@ func (l *LinkedList) InsertByIndex(index int, n *Node) {
 	}
 
 	//end case
-	if index == l.Length-1 {
+	if index >= l.Length {
 		l.AddToEnd(n)
 		return
 	}
 
 	// invalid index case
-	if index < 0 || index > l.Length-1 {
+	if index < 0 {
 		fmt.Println("Invalid Index.")
 		return
 	}
@@ -103,4 +103,72 @@ func (l *LinkedList) InsertByIndex(index int, n *Node) {
 		n.Next = temp
 	}
 	l.Length++
+}
+
+// function that checks if a value is in the Linked List
+func (l *LinkedList) isInList(value int) int {
+	temp := l.Head
+	for i := 0; i < l.Length; i++ {
+		if temp.Value == value {
+			return i
+		}
+		temp = temp.Next
+	}
+	return -1
+}
+
+// function to remove a Node from the beginning
+func (l *LinkedList) RemoveBeginning() {
+	temp := l.Head.Next
+	temp.Prev = nil
+	l.Head = temp
+	l.Length--
+}
+
+// function to remove from the end
+func (l *LinkedList) RemoveEnd() {
+	temp := l.Tail.Prev
+	temp.Next = nil
+	l.Tail = temp
+	l.Length--
+}
+
+// function to remove a node by value
+func (l *LinkedList) RemoveByValue(value int) {
+	// checks if the value is even in the list
+	pos := l.isInList(value)
+	if pos != -1 {
+		//check if the value is in the beginning
+		if pos == 0 {
+			l.RemoveBeginning()
+			return
+		}
+
+		//check if the value is at the end
+		if pos == l.Length-1 {
+			l.RemoveEnd()
+			return
+		}
+
+		// optimization to start at head or Tail
+		if pos < (l.Length-1)/2 {
+			temp := l.Head
+			for i := 0; i < pos-1; i++ {
+				temp = temp.Next
+			}
+			temp.Next.Next.Prev = temp
+			temp.Next = temp.Next.Next
+			l.Length--
+		} else {
+			temp := l.Tail
+			for i := l.Length - 1; i > pos; i-- {
+				temp = temp.Prev
+			}
+			temp.Prev.Prev.Next = temp
+			temp.Prev = temp.Prev.Prev
+			l.Length--
+		}
+
+	}
+	fmt.Println("Value not in List.")
 }
