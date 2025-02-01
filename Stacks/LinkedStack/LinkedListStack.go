@@ -28,9 +28,7 @@ func (s *Stack) push(n *Node) {
 	s.Size++
 }
 
-// pops a node of the stack and returns the node that was popped
 func (s *Stack) pop() (*Node, error) {
-	//throws an error if the stack is empty
 	if s.Head == nil {
 		return nil, errors.New("Stack is empty")
 	}
